@@ -1,16 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 public class LoginScreen extends JFrame {
+    // MySql DB connection
+    private final Connection con = new ConnectDB().connection();
+
+    // Views
     private JTextField username;
     private JTextField name;
     private JPasswordField password;
@@ -26,81 +28,81 @@ public class LoginScreen extends JFrame {
     private JTextField regNo;
     private JLabel regNoLabel;
 
-    private final Connection con = new ConnectDB().connection();
-
     LoginScreen() {
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isFormFilled()) {
-                    loginUser(username.getText(), password.getText());
-                }
+        // Login Button On Click Listener
+        loginButton.addActionListener(e -> {
+            // If login form is valid try logging in user
+            if (isFormFilled()) {
+                loginUser(username.getText(), password.getText());
             }
         });
-        createAccountButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (name.isVisible()) {
-                    if (isFormFilled()) {
-                        createUser(name.getText(), username.getText(), password.getText(), accountType.getSelectedIndex());
-                    }
+
+        // Create Account Button On Click Listener
+        createAccountButton.addActionListener(e -> {
+            // if in registration page
+            if (name.isVisible()) {
+                // create user
+                if (isFormFilled()) {
+                    createUser(name.getText(), username.getText(), password.getText(), accountType.getSelectedIndex());
+                }
+            } else {
+                // else set views to display registration page
+                errorField.setText("");
+                name.setVisible(true);
+                nameLabel.setVisible(true);
+                regNo.setVisible(true);
+                regNoLabel.setVisible(true);
+                goBackButton.setVisible(true);
+                accountType.setVisible(true);
+                loginButton.setVisible(false);
+                orLabel.setVisible(false);
+            }
+        });
+
+        // Go Back Button On Click Listener
+        goBackButton.addActionListener(e -> {
+            // set views to display login page
+            errorField.setText("");
+            name.setVisible(false);
+            nameLabel.setVisible(false);
+            goBackButton.setVisible(false);
+            regNo.setVisible(false);
+            regNoLabel.setVisible(false);
+            accountType.setVisible(false);
+            loginButton.setVisible(true);
+            orLabel.setVisible(true);
+        });
+
+        // Account Type Selector
+        accountType.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                Object item = e.getItem();
+                // If select type is Lecturer hide Reg No input view else show it
+                if (item.toString().equals("Lecturer")) {
+                    regNo.setVisible(false);
+                    regNoLabel.setVisible(false);
                 } else {
-                    errorField.setText("");
-                    name.setVisible(true);
-                    nameLabel.setVisible(true);
                     regNo.setVisible(true);
                     regNoLabel.setVisible(true);
-                    goBackButton.setVisible(true);
-                    accountType.setVisible(true);
-                    loginButton.setVisible(false);
-                    orLabel.setVisible(false);
                 }
             }
         });
 
-        goBackButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                errorField.setText("");
-                name.setVisible(false);
-                nameLabel.setVisible(false);
-                goBackButton.setVisible(false);
-                regNo.setVisible(false);
-                regNoLabel.setVisible(false);
-                accountType.setVisible(false);
-                loginButton.setVisible(true);
-                orLabel.setVisible(true);
-            }
-        });
-
-        accountType.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Object item = e.getItem();
-                    if (item.toString().equals("Lecturer")) {
-                        regNo.setVisible(false);
-                        regNoLabel.setVisible(false);
-                    } else {
-                        regNo.setVisible(true);
-                        regNoLabel.setVisible(true);
-                    }
-                }
-            }
-        });
-
+        // Set IIITK Logo
         try {
-            ImageIcon imageIcon = new ImageIcon(new ImageIcon("assets/logo.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon("assets/logo.png").getImage().getScaledInstance(130, 150, Image.SCALE_SMOOTH));
             icon.setIcon(imageIcon);
             icon.setMaximumSize(new Dimension(1, 1));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // Display entire page
         setContentPane(loginPanel);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(700, 500);
         setTitle("SDMS");
+        setIconImage(new ImageIcon("assets/logo.png").getImage());
         setVisible(true);
     }
 
@@ -119,10 +121,11 @@ public class LoginScreen extends JFrame {
                     regNo = Integer.parseInt(this.regNo.getText());
                 }
                 Statement statement = con.createStatement();
-                String sql = "INSERT INTO login_table(name, username, password, regNo, isStudent, isAdmin) VALUES (" + "'" + name+ "'," + "'" + username+ "'," + "'" + password+ "'," + regNo + "," + isStudent + ","+ isAdmin +")";
-                if (statement.executeUpdate(sql) == 1){
+                String sql = "INSERT INTO login_table(name, username, password, regNo, isStudent, isAdmin) VALUES (" + "'" + name + "'," + "'" + username + "'," + "'" + password + "'," + regNo + "," + isStudent + "," + isAdmin + ")";
+                if (statement.executeUpdate(sql) == 1) {
                     con.close();
                     dispose();
+                    setUserLoggedIn(name, username, regNo, isAdmin, isStudent);
                     new MainScreen();
                 }
             } catch (SQLException throwable) {
@@ -131,19 +134,31 @@ public class LoginScreen extends JFrame {
         }
     }
 
-    private void loginUser(String username, String password) {
+    private void setUserLoggedIn(String name, String username, int regNo, boolean isAdmin, boolean isStudent) {
+        try {
+            FileWriter userDetails = new FileWriter("user.txt");
+            userDetails.write(name + "\n" + username + "\n" + regNo + "\n" + isAdmin + "\n" + isStudent);
+            userDetails.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void loginUser(String username, String password) {
         if (con != null) {
             try {
                 Statement statement = con.createStatement();
-                String sql = "SELECT password FROM login_table WHERE username="+"'"+username+"'";
+                String sql = "SELECT name, username, password, regNo, isAdmin, isStudent FROM login_table WHERE username=" + "'" + username + "'";
                 ResultSet resultSet = statement.executeQuery(sql);
-                while (resultSet.next()){
-                    if (resultSet.getString("password").equals(password)){
+                while (resultSet.next()) {
+                    if (resultSet.getString("password").equals(password)) {
+                        setUserLoggedIn(resultSet.getString("name"), resultSet.getString("username"), resultSet.getInt("regNo"), resultSet.getBoolean("isAdmin"), resultSet.getBoolean("isStudent"));
+                        new MainScreen();
                         con.close();
                         dispose();
-                        new MainScreen();
                         break;
+                    } else {
+                        errorField.setText("Enter a Valid Password");
                     }
                 }
             } catch (SQLException throwable) {
@@ -154,6 +169,7 @@ public class LoginScreen extends JFrame {
     }
 
     private boolean isFormFilled() {
+        // Form Validation
         if (username.getText().isEmpty()) {
             errorField.setText("Enter Valid User Name");
             return false;

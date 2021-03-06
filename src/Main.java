@@ -1,10 +1,11 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        new LoginScreen();
+        if (new File("user.txt").exists()) {
+            new MainScreen();
+        } else {
+            new LoginScreen();
+        }
     }
 }
