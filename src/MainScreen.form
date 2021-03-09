@@ -18,46 +18,6 @@
           <text value="Add Student"/>
         </properties>
       </component>
-      <component id="8f072" class="javax.swing.JButton" binding="showAllStudentsGradesButton" default-binding="true">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Show All Students Grades"/>
-        </properties>
-      </component>
-      <component id="b397f" class="javax.swing.JButton" binding="showStudentGradesButton" default-binding="true">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Show Student Grades"/>
-        </properties>
-      </component>
-      <component id="cffe6" class="javax.swing.JButton" binding="editStudentDetailsButton" default-binding="true">
-        <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Edit Student Details"/>
-        </properties>
-      </component>
-      <component id="fe600" class="javax.swing.JButton" binding="showAllAccountsButton" default-binding="true">
-        <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Show All Accounts"/>
-        </properties>
-      </component>
-      <component id="b775f" class="javax.swing.JButton" binding="showAllStudentsButton" default-binding="true">
-        <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Show All Students"/>
-        </properties>
-      </component>
       <component id="9cc5d" class="javax.swing.JLabel" binding="icon">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -72,6 +32,38 @@
         </constraints>
         <properties>
           <text value="Log Out"/>
+        </properties>
+      </component>
+      <component id="b775f" class="javax.swing.JButton" binding="showAllStudentsButton" default-binding="true">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Show All Students"/>
+        </properties>
+      </component>
+      <component id="fe600" class="javax.swing.JButton" binding="showAllAccountsButton" default-binding="true">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Show All Accounts"/>
+        </properties>
+      </component>
+      <component id="b7d1c" class="javax.swing.JButton" binding="showAllStudentsGradesButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Show All Students Grades"/>
+        </properties>
+      </component>
+      <component id="a1ef2" class="javax.swing.JButton" binding="publishGradesButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Publish Grades"/>
         </properties>
       </component>
     </children>

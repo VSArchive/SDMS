@@ -1,28 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class MainScreen extends JFrame {
     private JPanel mainPanel;
     private JButton logOutButton;
     private JButton addStudentButton;
-    private JButton editStudentDetailsButton;
     private JButton showAllStudentsButton;
-    private JButton showAllStudentsGradesButton;
-    private JButton showStudentGradesButton;
     private JButton showAllAccountsButton;
     private JLabel icon;
+    private JButton showAllStudentsGradesButton;
+    private JButton publishGradesButton;
 
     MainScreen() {
+        // Add Students Button onclick listener
+        addStudentButton.addActionListener(e -> {
+            new AddEditStudentDetails();
+        });
+
         // Log Out Button onclick listener
         logOutButton.addActionListener(e -> {
             // Get User Credential file
             File userDetails = new File("user.txt");
             // if File Exits delete it and logout else just logout
-            if (userDetails.exists()){
-                if (userDetails.delete()){
+            if (userDetails.exists()) {
+                if (userDetails.delete()) {
                     dispose();
                     new LoginScreen();
                 }
