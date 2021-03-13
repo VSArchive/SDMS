@@ -1,7 +1,18 @@
 import javax.swing.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
 public class AddEditStudentDetails extends JFrame {
+    // MySql DB connection
+    private final Connection con = new ConnectDB().connection();
+
+    // Views
     private JTextField nameField;
     private JTextField regNoField;
     private JTextField rollNoField;
@@ -32,12 +43,90 @@ public class AddEditStudentDetails extends JFrame {
     private JLabel errorLabel;
     private JLabel successLabel;
 
-    AddEditStudentDetails() {
+    // Each Semester Grades
+    private String sem1Grades = "";
+    private String sem2Grades = "";
+    private String sem3Grades = "";
+    private String sem4Grades = "";
+    private String sem5Grades = "";
+    private String sem6Grades = "";
+    private String sem7Grades = "";
+    private String sem8Grades = "";
 
+    private String allGrades = "";
+
+    private final List<String> validGrades = Arrays.asList("a", "b", "c", "d", "p", "f", "fr", "");
+
+    AddEditStudentDetails() {
         semSelection.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 int selected = semSelection.getSelectedIndex();
                 setLabels(selected);
+            }
+        });
+
+        saveGradesButton.addActionListener(e -> {
+            if (isValidGrades()) {
+                if (semSelection.getSelectedIndex() == 0) {
+                    sem1Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 1) {
+                    sem2Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 2) {
+                    sem3Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 3) {
+                    sem4Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 4) {
+                    sem5Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 5) {
+                    sem6Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 6) {
+                    sem7Grades = getSemGrades();
+                } else if (semSelection.getSelectedIndex() == 7) {
+                    sem8Grades = getSemGrades();
+                }
+                setSuccessLabel("Grades Saved Successfully");
+            } else {
+                setErrorLabel("Enter Valid Grades");
+            }
+        });
+
+        saveButton.addActionListener(e -> {
+            if (isFormFilled()) {
+                allGrades = getGrades();
+                String name = nameField.getText();
+                int regNo = Integer.parseInt(regNoField.getText());
+                int rollNo = Integer.parseInt(rollNoField.getText());
+                int sem = Integer.parseInt(semField.getText());
+                String email = emailField.getText();
+                int year = sem / 2;
+                if (con != null) {
+                    try {
+                        Statement statement = con.createStatement();
+                        String sql = "INSERT INTO data_table(name, regNo, rollNo, year, semester, email, grades) VALUES (" + "'" + name + "'," + regNo + "," + rollNo + "," + year + "," + sem + "," + "'" + email + "'," + "'" + allGrades + "'" + ")";
+                        if (statement.executeUpdate(sql) == 1) {
+                            setSuccessLabel("Saved Successfully");
+                        }
+                    } catch (SQLException throwable) {
+                        setErrorLabel(throwable.getMessage());
+                        throwable.printStackTrace();
+                    }
+                } else {
+                    setErrorLabel("Unable to connect to database");
+                }
+            } else {
+                setErrorLabel("Enter Valid Details");
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                try {
+                    con.close();
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
 
@@ -47,6 +136,51 @@ public class AddEditStudentDetails extends JFrame {
         setTitle("SDMS");
         setIconImage(new ImageIcon("assets/logo.png").getImage());
         setVisible(true);
+    }
+
+    private boolean isFormFilled() {
+        if (nameField.getText().isEmpty()) {
+            setErrorLabel("Enter Valid Name");
+            return false;
+        } else if (regNoField.getText().isEmpty()) {
+            setErrorLabel("Enter Valid Reg No");
+            return false;
+        } else if (rollNoField.getText().isEmpty()) {
+            setErrorLabel("Enter Valid Roll No");
+            return false;
+        } else if (semField.getText().isEmpty()) {
+            setErrorLabel("Enter Valid Semester");
+            return false;
+        } else if (emailField.getText().isEmpty()) {
+            setErrorLabel("Enter Valid Email");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void setErrorLabel(String message) {
+        successLabel.setVisible(false);
+        errorLabel.setVisible(true);
+        errorLabel.setText(message);
+    }
+
+    private void setSuccessLabel(String message) {
+        errorLabel.setVisible(false);
+        successLabel.setVisible(true);
+        successLabel.setText(message);
+    }
+
+    private String getSemGrades() {
+        return subject1Field.getText() + "," + subject2Field.getText() + "," + subject3Field.getText() + "," + subject4Field.getText() + "," + subject5Field.getText() + "," + subject6Field.getText() + "," + subject7Field.getText() + "," + subject8Field.getText() + "," + subject9Field.getText();
+    }
+
+    private String getGrades() {
+        return sem1Grades + ";" + sem2Grades + ";" + sem3Grades + ";" + sem4Grades + ";" + sem5Grades + ";" + sem6Grades + ";" + sem7Grades + ";" + sem8Grades;
+    }
+
+    private boolean isValidGrades() {
+        return validGrades.contains(subject1Field.getText().toLowerCase()) && validGrades.contains(subject2Field.getText().toLowerCase()) && validGrades.contains(subject3Field.getText().toLowerCase()) && validGrades.contains(subject4Field.getText().toLowerCase()) && validGrades.contains(subject5Field.getText().toLowerCase()) && validGrades.contains(subject6Field.getText().toLowerCase()) && validGrades.contains(subject7Field.getText().toLowerCase()) && validGrades.contains(subject8Field.getText().toLowerCase()) && validGrades.contains(subject9Field.getText().toLowerCase());
     }
 
     private void setLabels(int selected) {
@@ -163,6 +297,4 @@ public class AddEditStudentDetails extends JFrame {
             subject9Field.setVisible(false);
         }
     }
-
-
 }
