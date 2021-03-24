@@ -44,20 +44,26 @@ public class AddEditStudentDetails extends JFrame {
     private JLabel successLabel;
 
     // Each Semester Grades
-    private String sem1Grades = "";
-    private String sem2Grades = "";
-    private String sem3Grades = "";
-    private String sem4Grades = "";
-    private String sem5Grades = "";
-    private String sem6Grades = "";
-    private String sem7Grades = "";
-    private String sem8Grades = "";
+    private String sem1Grades = " , , , , , , , , ";
+    private String sem2Grades = " , , , , , , , , ";
+    private String sem3Grades = " , , , , , , , , ";
+    private String sem4Grades = " , , , , , , , , ";
+    private String sem5Grades = " , , , , , , , , ";
+    private String sem6Grades = " , , , , , , , , ";
+    private String sem7Grades = " , , , , , , , , ";
+    private String sem8Grades = " , , , , , , , , ";
 
     private String allGrades = "";
 
-    private final List<String> validGrades = Arrays.asList("a", "b", "c", "d", "p", "f", "fr", "");
+    private final List<String> validGrades = Arrays.asList("ex", "a", "b", "c", "d", "p", "f", "fr", "");
 
     AddEditStudentDetails() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         semSelection.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 int selected = semSelection.getSelectedIndex();
@@ -93,6 +99,15 @@ public class AddEditStudentDetails extends JFrame {
         saveButton.addActionListener(e -> {
             if (isFormFilled()) {
                 allGrades = getGrades();
+                System.out.println(allGrades);
+                String[][] grades = new String[8][9];
+                String[] grades_y = allGrades.split(";");
+                System.out.println(Arrays.deepToString(grades_y));
+                for (int y = 0; y < 8; y++) {
+                    String[] grades_x = grades_y[y].split(",");
+                    grades[y] = grades_x;
+                }
+                System.out.println(Arrays.deepToString(grades));
                 String name = nameField.getText();
                 int regNo = Integer.parseInt(regNoField.getText());
                 int rollNo = Integer.parseInt(rollNoField.getText());
@@ -105,6 +120,14 @@ public class AddEditStudentDetails extends JFrame {
                         String sql = "INSERT INTO data_table(name, regNo, rollNo, year, semester, email, grades) VALUES (" + "'" + name + "'," + regNo + "," + rollNo + "," + year + "," + sem + "," + "'" + email + "'," + "'" + allGrades + "'" + ")";
                         if (statement.executeUpdate(sql) == 1) {
                             setSuccessLabel("Saved Successfully");
+                            sql = "INSERT INTO grades_table(regNo, `MA-101`, `PH-101`, `EC-101`, `CS-101`, `HU-101`, `HU-102`, `CS-111`, `EC-111`, `CS-201`, `EC-201`, `CS-202`, `CS-203`, `HU-201`, `EC-211`, `CS-211`, `CS-212`, `MA-301`, `CS-301`, `CS-302`, `CS-303`, `HU-301`, `CS-311`, `CS-312`, `CS-313`, `CS-401`, `CS-402`, `CS-403`, `EC-401`, `EC-402`, `CS-411`, `CS-412`, `CS-413`, `CS-501`, `CS-502`, `EC-501`, `Elective-1`, `HU-501`, `CS-511`, `EC-511`, `CS-591`, `CS-601`, `CS-602`, `CS-603`, `CS-604`, `Elective-2`, `CS-611`, `CS-612`, `HU-611`, `CS-691`, `CS-701`, `CS-702`, `Elective-3`, `Elective-4`, `CS-711`, `CS-791`, `Elective-5`, `Elective-6` ,`Elective-7` ,`CS-891`, `CS-892`) VALUES(" + regNo + ",'" + grades[0][0] + "', '" + grades[0][1] + "', '" + grades[0][2] + "', '" + grades[0][3] + "', '" + grades[0][4] + "', '" + grades[0][5] + "', '" + grades[0][6] + "', '" + grades[0][7] + "', '" + grades[1][0] + "', '" + grades[1][1] + "', '" + grades[1][2] + "', '" + grades[1][3] + "', '" + grades[1][4] + "', '" + grades[1][5] + "', '" + grades[1][6] + "', '" + grades[1][7] + "', '" + grades[2][0] + "', '" + grades[2][1] + "', '" + grades[2][2] + "', '" + grades[2][3] + "', '" + grades[2][4] + "', '" + grades[2][5] + "', '" + grades[2][6] + "', '" + grades[2][7] + "', '" + grades[3][0] + "', '" + grades[3][1] + "', '" + grades[3][2] + "', '" + grades[3][3] + "', '" + grades[3][4] + "', '" + grades[3][5] + "', '" + grades[3][6] + "', '" + grades[3][7] + "', '" + grades[4][0] + "', '" + grades[4][1] + "', '" + grades[4][2] + "', '" + grades[4][3] + "', '" + grades[4][4] + "', '" + grades[4][5] + "', '" + grades[4][6] + "', '" + grades[4][7] + "', '" + grades[5][0] + "', '" + grades[5][1] + "', '" + grades[5][2] + "', '" + grades[5][3] + "', '" + grades[5][4] + "', '" + grades[5][5] + "', '" + grades[5][6] + "', '" + grades[5][7] + "', '" + grades[5][8] + "', '" + grades[6][0] + "', '" + grades[6][1] + "', '" + grades[6][2] + "', '" + grades[6][3] + "', '" + grades[6][4] + "', '" + grades[6][5] + "', '" + grades[7][0] + "', '" + grades[7][1] + "', '" + grades[7][2] + "', '" + grades[7][3] + "', '" + grades[7][4] + "'" + ")";
+                            if (statement.executeUpdate(sql) == 1) {
+                                setSuccessLabel("Saved Successfully");
+                            } else {
+                                setErrorLabel("Failed to update db");
+                            }
+                        } else {
+                            setErrorLabel("Failed to update db");
                         }
                     } catch (SQLException throwable) {
                         setErrorLabel(throwable.getMessage());
@@ -172,7 +195,7 @@ public class AddEditStudentDetails extends JFrame {
     }
 
     private String getSemGrades() {
-        return subject1Field.getText() + "," + subject2Field.getText() + "," + subject3Field.getText() + "," + subject4Field.getText() + "," + subject5Field.getText() + "," + subject6Field.getText() + "," + subject7Field.getText() + "," + subject8Field.getText() + "," + subject9Field.getText();
+        return subject1Field.getText() + " ," + subject2Field.getText() + " ," + subject3Field.getText() + " ," + subject4Field.getText() + " ," + subject5Field.getText() + " ," + subject6Field.getText() + " ," + subject7Field.getText() + " ," + subject8Field.getText() + " ," + subject9Field.getText() + " ";
     }
 
     private String getGrades() {

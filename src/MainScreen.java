@@ -7,15 +7,26 @@ public class MainScreen extends JFrame {
     private JButton logOutButton;
     private JButton addStudentButton;
     private JButton showAllStudentsButton;
-    private JButton showAllAccountsButton;
     private JLabel icon;
     private JButton showAllStudentsGradesButton;
     private JButton publishGradesButton;
+    private JButton showYourAccountDetailsButton;
+    private JButton showYourGradesButton;
 
     MainScreen() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Add Students Button onclick listener
         addStudentButton.addActionListener(e -> {
             new AddEditStudentDetails();
+        });
+
+        showAllStudentsButton.addActionListener(e -> {
+            new ShowAllStudents();
         });
 
         // Log Out Button onclick listener

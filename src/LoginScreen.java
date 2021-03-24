@@ -29,6 +29,12 @@ public class LoginScreen extends JFrame {
     private JLabel regNoLabel;
 
     LoginScreen() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Login Button On Click Listener
         loginButton.addActionListener(e -> {
             // If login form is valid try logging in user
@@ -125,7 +131,7 @@ public class LoginScreen extends JFrame {
                 if (statement.executeUpdate(sql) == 1) {
                     con.close();
                     dispose();
-                    setUserLoggedIn(name, username, regNo, isAdmin, isStudent);
+                    setUserLoggedIn(username);
                     new MainScreen();
                 }
             } catch (SQLException throwable) {
@@ -134,10 +140,10 @@ public class LoginScreen extends JFrame {
         }
     }
 
-    private void setUserLoggedIn(String name, String username, int regNo, boolean isAdmin, boolean isStudent) {
+    private void setUserLoggedIn(String username) {
         try {
             FileWriter userDetails = new FileWriter("user.txt");
-            userDetails.write(name + "\n" + username + "\n" + regNo + "\n" + isAdmin + "\n" + isStudent);
+            userDetails.write(username);
             userDetails.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -152,7 +158,7 @@ public class LoginScreen extends JFrame {
                 ResultSet resultSet = statement.executeQuery(sql);
                 while (resultSet.next()) {
                     if (resultSet.getString("password").equals(password)) {
-                        setUserLoggedIn(resultSet.getString("name"), resultSet.getString("username"), resultSet.getInt("regNo"), resultSet.getBoolean("isAdmin"), resultSet.getBoolean("isStudent"));
+                        setUserLoggedIn(resultSet.getString("username"));
                         new MainScreen();
                         con.close();
                         dispose();
