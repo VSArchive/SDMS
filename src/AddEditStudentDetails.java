@@ -99,15 +99,12 @@ public class AddEditStudentDetails extends JFrame {
         saveButton.addActionListener(e -> {
             if (isFormFilled()) {
                 allGrades = getGrades();
-                System.out.println(allGrades);
                 String[][] grades = new String[8][9];
                 String[] grades_y = allGrades.split(";");
-                System.out.println(Arrays.deepToString(grades_y));
                 for (int y = 0; y < 8; y++) {
                     String[] grades_x = grades_y[y].split(",");
                     grades[y] = grades_x;
                 }
-                System.out.println(Arrays.deepToString(grades));
                 String name = nameField.getText();
                 int regNo = Integer.parseInt(regNoField.getText());
                 int rollNo = Integer.parseInt(rollNoField.getText());

@@ -25,6 +25,10 @@ public class MainScreen extends JFrame {
             new AddEditStudentDetails();
         });
 
+        showAllStudentsGradesButton.addActionListener(e -> {
+            new ShowAllStudentsGrades();
+        });
+
         showAllStudentsButton.addActionListener(e -> {
             new ShowAllStudents();
         });
