@@ -2,6 +2,8 @@
   <library name="mysql-connector-java-8.0.23">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-8.0.23.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mail.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/activation.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +18,7 @@ public class ShowAllStudentsGrades extends JFrame {
                 String[][] data = new String[60][];
                 int i = 0;
                 while (resultSet.next()) {
-                    String[] sub = {String.valueOf(resultSet.getInt("regNo")), resultSet.getString("MA-101").trim(), resultSet.getString("PH-101").trim(), resultSet.getString("EC-101").trim(),
+                    String[] sub = {resultSet.getString("name").trim(), String.valueOf(resultSet.getInt("regNo")), resultSet.getString("MA-101").trim(), resultSet.getString("PH-101").trim(), resultSet.getString("EC-101").trim(),
                             resultSet.getString("CS-101").trim(), resultSet.getString("HU-101").trim(), resultSet.getString("HU-102").trim(),
                             resultSet.getString("CS-111").trim(), resultSet.getString("EC-111").trim(), resultSet.getString("CS-201").trim(),
                             resultSet.getString("EC-201").trim(), resultSet.getString("CS-202").trim(), resultSet.getString("CS-203").trim(),
@@ -40,9 +39,9 @@ public class ShowAllStudentsGrades extends JFrame {
                             resultSet.getString("CS-791").trim(), resultSet.getString("Elective-5").trim(), resultSet.getString("Elective-6").trim(),
                             resultSet.getString("Elective-7").trim(), resultSet.getString("CS-891").trim(), resultSet.getString("CS-892").trim()};
                     data[i] = sub;
+                    i++;
                 }
-                String[] column = {"Reg No", "MA-101", "PH-101", "EC-101", "CS-101", "HU-101", "HU-102", "CS-111", "EC-111", "CS-201", "EC-201", "CS-202", "CS-203", "HU-201", "EC-211", "CS-211", "CS-212", "MA-301", "CS-301", "CS-302", "CS-303", "HU-301", "CS-311", "CS-312", "CS-313", "CS-401", "CS-402", "CS-403", "EC-401", "EC-402", "CS-411", "CS-412", "CS-413", "CS-501", "CS-502", "EC-501", "Elective-1", "HU-501", "CS-511", "EC-511", "CS-591", "CS-601", "CS-602", "CS-603", "CS-604", "Elective-2", "CS-611", "CS-612", "HU-611", "CS-691", "CS-701", "CS-702", "Elective-3", "Elective-4", "CS-711", "CS-791", "Elective-5", "Elective-6", "Elective-7", "CS-891", "CS-892"};
-
+                String[] column = {"Name", "Reg No", "MA-101", "PH-101", "EC-101", "CS-101", "HU-101", "HU-102", "CS-111", "EC-111", "CS-201", "EC-201", "CS-202", "CS-203", "HU-201", "EC-211", "CS-211", "CS-212", "MA-301", "CS-301", "CS-302", "CS-303", "HU-301", "CS-311", "CS-312", "CS-313", "CS-401", "CS-402", "CS-403", "EC-401", "EC-402", "CS-411", "CS-412", "CS-413", "CS-501", "CS-502", "EC-501", "Elective-1", "HU-501", "CS-511", "EC-511", "CS-591", "CS-601", "CS-602", "CS-603", "CS-604", "Elective-2", "CS-611", "CS-612", "HU-611", "CS-691", "CS-701", "CS-702", "Elective-3", "Elective-4", "CS-711", "CS-791", "Elective-5", "Elective-6", "Elective-7", "CS-891", "CS-892"};
                 JTable grades = new JTable();
 
                 grades.setModel(new DefaultTableModel(data, column));

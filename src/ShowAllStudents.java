@@ -50,13 +50,27 @@ public class ShowAllStudents extends JFrame {
                         name[i].setText(nameList.get(i));
                         regNo[i].setText(String.valueOf(regNoList.get(i)));
 
-                        int finalI = i;
+                        int j = i;
                         delete[i].addActionListener(e -> {
-                            String deleteSql = "DELETE FROM data_table WHERE regNo=" + regNoList.get(finalI);
                             try {
+                                String deleteSql = "DELETE FROM data_table WHERE regNo=" + regNoList.get(j);
+                                statement.execute(deleteSql);
+                                deleteSql = "DELETE FROM grades_table WHERE regNo=" + regNoList.get(j);
                                 statement.execute(deleteSql);
                                 dispose();
                                 new ShowAllStudents();
+                            } catch (SQLException throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
+
+                        edit[i].addActionListener(e -> {
+                            String editSql = "SELECT * FROM data_table WHERE regNo=" + regNoList.get(j);
+                            try {
+                                ResultSet result = statement.executeQuery(editSql);
+                                while (result.next()){
+                                    new AddEditStudentDetails(result.getString("name"), result.getInt("regNo"), result.getInt("rollNo"), result.getInt("semester"), result.getString("email"), result.getString("grades"));
+                                }
                             } catch (SQLException throwable) {
                                 throwable.printStackTrace();
                             }

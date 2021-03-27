@@ -1,6 +1,7 @@
 -- auto-generated definition
 create table grades_table
 (
+    name        text  null,
     regNo        int  null,
     `MA-101`     text null,
     `PH-101`     text null,
