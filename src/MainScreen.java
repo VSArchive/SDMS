@@ -18,14 +18,15 @@ public class MainScreen extends JFrame {
 
     private JPanel mainPanel;
     private JButton logOutButton;
-    private JButton addStudentButton;
-    private JButton showAllStudentsButton;
+    private JButton addStudentsButton;
+    private JButton editStudentsButton;
     private JLabel icon;
     private JLabel logLabel;
     private JButton showAllStudentsGradesButton;
     private JButton publishGradesButton;
     private JButton showYourAccountDetailsButton;
     private JButton showYourGradesButton;
+    private JButton studentsListButton;
 
     MainScreen() {
         try {
@@ -34,12 +35,61 @@ public class MainScreen extends JFrame {
             e.printStackTrace();
         }
 
-        // Add Students Button onclick listener
-        addStudentButton.addActionListener(e -> new AddEditStudentDetails());
+        addStudentsButton.setMinimumSize(new Dimension(200, 10));
+        editStudentsButton.setMinimumSize(new Dimension(200, 10));
+        showAllStudentsGradesButton.setMinimumSize(new Dimension(200, 10));
 
-        showAllStudentsButton.addActionListener(e -> new ShowAllStudents());
+        if (con != null) {
+            try {
+                FileReader fileReader = new FileReader("user.txt");
+                int i;
+                StringBuilder username = new StringBuilder();
+                while ((i = fileReader.read()) != -1) {
+                    username.append((char) i);
+                }
+                Statement statement = con.createStatement();
+                String sql = "SELECT * FROM login_table WHERE username=" + "'" + username.toString() + "'";
+                ResultSet resultSet = statement.executeQuery(sql);
+                while (resultSet.next()) {
+                    if (!resultSet.getBoolean("isAdmin")) {
+                        addStudentsButton.setVisible(false);
+                        editStudentsButton.setVisible(false);
+                        publishGradesButton.setVisible(false);
+                        showAllStudentsGradesButton.setVisible(false);
+                    } else if (!resultSet.getBoolean("isStudent")) {
+                        showYourGradesButton.setVisible(false);
+                    }
+                }
+            } catch (SQLException | IOException throwable) {
+                throwable.printStackTrace();
+            }
+        }
+
+        // Log Out Button onclick listener
+        logOutButton.addActionListener(e -> {
+            // Get User Credential file
+            File userDetails = new File("../user.txt");
+            // if File Exits delete it and logout else just logout
+            if (userDetails.exists()) {
+                if (userDetails.delete()) {
+                    System.out.println("test");
+                    dispose();
+                    new LoginScreen();
+                }
+            } else {
+                dispose();
+                new LoginScreen();
+            }
+        });
+
+        // Add Students Button onclick listener
+        addStudentsButton.addActionListener(e -> new AddEditStudentDetails());
+
+        editStudentsButton.addActionListener(e -> new EditStudents());
 
         showAllStudentsGradesButton.addActionListener(e -> new ShowAllStudentsGrades());
+
+        studentsListButton.addActionListener(e -> new ShowStudents());
 
         publishGradesButton.addActionListener(e -> {
             if (con != null) {
@@ -148,22 +198,6 @@ public class MainScreen extends JFrame {
 
         showYourGradesButton.addActionListener(e -> {
 
-        });
-
-        // Log Out Button onclick listener
-        logOutButton.addActionListener(e -> {
-            // Get User Credential file
-            File userDetails = new File("user.txt");
-            // if File Exits delete it and logout else just logout
-            if (userDetails.exists()) {
-                if (userDetails.delete()) {
-                    dispose();
-                    new LoginScreen();
-                }
-            } else {
-                dispose();
-                new LoginScreen();
-            }
         });
 
         // Set IIITK Logo

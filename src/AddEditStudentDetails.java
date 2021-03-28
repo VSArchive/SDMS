@@ -11,7 +11,7 @@ import java.util.List;
 public class AddEditStudentDetails extends JFrame {
     // MySql DB connection
     private final Connection con = new ConnectDB().connection();
-
+    private final List<String> validGrades = Arrays.asList("ex", "a", "b", "c", "d", "p", "f", "fr", "");
     // Views
     private JTextField nameField;
     private JTextField regNoField;
@@ -42,7 +42,6 @@ public class AddEditStudentDetails extends JFrame {
     private JButton saveButton;
     private JLabel errorLabel;
     private JLabel successLabel;
-
     // Each Semester Grades
     private String sem1Grades = " , , , , , , , , ";
     private String sem2Grades = " , , , , , , , , ";
@@ -52,10 +51,7 @@ public class AddEditStudentDetails extends JFrame {
     private String sem6Grades = " , , , , , , , , ";
     private String sem7Grades = " , , , , , , , , ";
     private String sem8Grades = " , , , , , , , , ";
-
     private String allGrades = "";
-
-    private final List<String> validGrades = Arrays.asList("ex", "a", "b", "c", "d", "p", "f", "fr", "");
 
     AddEditStudentDetails() {
         try {

@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class ShowAllStudents extends JFrame {
+public class EditStudents extends JFrame {
 
     private final Connection con = new ConnectDB().connection();
 
-    ShowAllStudents() {
+    EditStudents() {
         EventQueue.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -58,7 +58,7 @@ public class ShowAllStudents extends JFrame {
                                 deleteSql = "DELETE FROM grades_table WHERE regNo=" + regNoList.get(j);
                                 statement.execute(deleteSql);
                                 dispose();
-                                new ShowAllStudents();
+                                new EditStudents();
                             } catch (SQLException throwable) {
                                 throwable.printStackTrace();
                             }
@@ -68,7 +68,7 @@ public class ShowAllStudents extends JFrame {
                             String editSql = "SELECT * FROM data_table WHERE regNo=" + regNoList.get(j);
                             try {
                                 ResultSet result = statement.executeQuery(editSql);
-                                while (result.next()){
+                                while (result.next()) {
                                     new AddEditStudentDetails(result.getString("name"), result.getInt("regNo"), result.getInt("rollNo"), result.getInt("semester"), result.getString("email"), result.getString("grades"));
                                 }
                             } catch (SQLException throwable) {
