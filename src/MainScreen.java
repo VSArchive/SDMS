@@ -35,18 +35,23 @@ public class MainScreen extends JFrame {
             e.printStackTrace();
         }
 
+        StringBuilder username = new StringBuilder();
+        try {
+            FileReader fileReader = new FileReader("user.txt");
+            int i;
+            while ((i = fileReader.read()) != -1) {
+                username.append((char) i);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         addStudentsButton.setMinimumSize(new Dimension(200, 10));
         editStudentsButton.setMinimumSize(new Dimension(200, 10));
         showAllStudentsGradesButton.setMinimumSize(new Dimension(200, 10));
 
         if (con != null) {
             try {
-                FileReader fileReader = new FileReader("user.txt");
-                int i;
-                StringBuilder username = new StringBuilder();
-                while ((i = fileReader.read()) != -1) {
-                    username.append((char) i);
-                }
                 Statement statement = con.createStatement();
                 String sql = "SELECT * FROM login_table WHERE username=" + "'" + username.toString() + "'";
                 ResultSet resultSet = statement.executeQuery(sql);
@@ -60,7 +65,7 @@ public class MainScreen extends JFrame {
                         showYourGradesButton.setVisible(false);
                     }
                 }
-            } catch (SQLException | IOException throwable) {
+            } catch (SQLException throwable) {
                 throwable.printStackTrace();
             }
         }
@@ -178,26 +183,101 @@ public class MainScreen extends JFrame {
         showYourAccountDetailsButton.addActionListener(e -> {
             if (con != null) {
                 try {
-                    FileReader fileReader = new FileReader("user.txt");
-                    int i;
-                    StringBuilder username = new StringBuilder();
-                    while ((i = fileReader.read()) != -1) {
-                        username.append((char) i);
-                    }
                     Statement statement = con.createStatement();
                     String sql = "SELECT * FROM login_table WHERE username=" + "'" + username.toString() + "'";
                     ResultSet resultSet = statement.executeQuery(sql);
                     while (resultSet.next()) {
                         JOptionPane.showMessageDialog(null, "Name : " + resultSet.getString("name") + "\n" + "User Name : " + resultSet.getString("username") + "\n" + "Student : " + resultSet.getBoolean("isStudent") + "\n" + "Admin : " + resultSet.getBoolean("isAdmin") + "\n" + "Reg No : " + resultSet.getInt("regNo"), "Account Details", JOptionPane.INFORMATION_MESSAGE);
                     }
-                } catch (SQLException | IOException throwable) {
+                } catch (SQLException throwable) {
                     throwable.printStackTrace();
                 }
             }
         });
 
         showYourGradesButton.addActionListener(e -> {
-
+            if (con != null) {
+                try {
+                    Statement statement = con.createStatement();
+                    String sql = "SELECT * FROM login_table WHERE username=" + "'" + username.toString() + "'";
+                    ResultSet resultSet = statement.executeQuery(sql);
+                    while (resultSet.next()) {
+                        sql = "SELECT * FROM data_table WHERE regNo=" + resultSet.getInt("regNo");
+                        resultSet = statement.executeQuery(sql);
+                        while (resultSet.next()) {
+                            String[][] grades = new String[8][9];
+                            String[] grades__y = resultSet.getString("grades").split(";");
+                            for (int y = 0; y < 8; y++) {
+                                String[] grades_x = grades__y[y].split(",");
+                                grades[y] = grades_x;
+                            }
+                            String msg = "MA-101 : " + grades[0][0] + "                         " +
+                                    "PH-101 : " + grades[0][0] + "\n" +
+                                    "EC-101 : " + grades[0][1] + "                         " +
+                                    "CS-101 : " + grades[0][2] + "\n" +
+                                    "HU-101 : " + grades[0][3] + "                         " +
+                                    "HU-102 : " + grades[0][4] + "\n" +
+                                    "CS-111 : " + grades[0][5] + "                         " +
+                                    "EC-111 : " + grades[0][6] + "\n" +
+                                    "CS-201 : " + grades[1][7] + "                         " +
+                                    "EC-201 : " + grades[1][1] + "\n" +
+                                    "CS-202 : " + grades[1][2] + "                         " +
+                                    "CS-203 : " + grades[1][3] + "\n" +
+                                    "HU-201 : " + grades[1][4] + "                         " +
+                                    "EC-211 : " + grades[1][5] + "\n" +
+                                    "CS-211 : " + grades[1][6] + "                         " +
+                                    "CS-212 : " + grades[1][7] + "\n" +
+                                    "MA-301 : " + grades[2][0] + "z" +
+                                    "CS-301 : " + grades[2][1] + "\n" +
+                                    "CS-302 : " + grades[2][2] + "                         " +
+                                    "CS-303 : " + grades[2][3] + "\n" +
+                                    "HU-301 : " + grades[2][4] + "                         " +
+                                    "CS-311 : " + grades[2][5] + "\n" +
+                                    "CS-312 : " + grades[2][6] + "                         " +
+                                    "CS-313 : " + grades[2][7] + "\n" +
+                                    "CS-401 : " + grades[3][0] + "                         " +
+                                    "CS-402 : " + grades[3][1] + "\n" +
+                                    "CS-403 : " + grades[3][2] + "                         " +
+                                    "EC-401 : " + grades[3][3] + "\n" +
+                                    "EC-402 : " + grades[3][4] + "                         " +
+                                    "CS-411 : " + grades[3][5] + "\n" +
+                                    "CS-412 : " + grades[3][6] + "                         " +
+                                    "CS-413 : " + grades[3][7] + "\n" +
+                                    "CS-501 : " + grades[4][0] + "                         " +
+                                    "CS-502 : " + grades[4][1] + "\n" +
+                                    "EC-501 : " + grades[4][2] + "                         " +
+                                    "Elective-1 : " + grades[4][3] + "\n" +
+                                    "HU-501 : " + grades[4][4] + "                         " +
+                                    "CS-511 : " + grades[4][5] + "\n" +
+                                    "EC-511 : " + grades[4][6] + "                         " +
+                                    "CS-591 : " + grades[4][7] + "\n" +
+                                    "CS-601 : " + grades[5][0] + "                         " +
+                                    "CS-602 : " + grades[5][1] + "\n" +
+                                    "CS-603 : " + grades[5][2] + "                         " +
+                                    "CS-604 : " + grades[5][3] + "\n" +
+                                    "Elective-2 : " + grades[5][4] + "                         " +
+                                    "CS-611 : " + grades[5][5] + "\n" +
+                                    "CS-612 : " + grades[5][6] + "                         " +
+                                    "HU-611 : " + grades[5][7] + "\n" +
+                                    "CS-691 : " + grades[5][8] + "                         " +
+                                    "CS-701 : " + grades[6][0] + "\n" +
+                                    "CS-702 : " + grades[6][1] + "                         " +
+                                    "Elective-3 : " + grades[6][2] + "\n" +
+                                    "Elective-4 : " + grades[6][3] + "                         " +
+                                    "CS-711 : " + grades[6][4] + "\n" +
+                                    "CS-791 : " + grades[6][5] + "                         " +
+                                    "Elective-5 : " + grades[7][0] + "\n" +
+                                    "Elective-6 : " + grades[7][1] + "                         " +
+                                    "Elective-7 : " + grades[7][2] + "\n" +
+                                    "CS-891 : " + grades[7][3] + "                         " +
+                                    "CS-892 : " + grades[7][4];
+                            JOptionPane.showMessageDialog(null, msg);
+                        }
+                    }
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         });
 
         // Set IIITK Logo
