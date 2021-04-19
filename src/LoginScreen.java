@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
@@ -142,7 +143,8 @@ public class LoginScreen extends JFrame {
 
     private void setUserLoggedIn(String username) {
         try {
-            FileWriter userDetails = new FileWriter("user.txt");
+            File file = new File("user.txt");
+            FileWriter userDetails = new FileWriter(file);
             userDetails.write(username);
             userDetails.close();
         } catch (IOException e) {

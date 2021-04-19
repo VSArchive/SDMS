@@ -6,6 +6,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +44,7 @@ public class MainScreen extends JFrame {
             while ((i = fileReader.read()) != -1) {
                 username.append((char) i);
             }
+            fileReader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,17 +76,14 @@ public class MainScreen extends JFrame {
         // Log Out Button onclick listener
         logOutButton.addActionListener(e -> {
             // Get User Credential file
-            File userDetails = new File("../user.txt");
+            File userDetails = new File("user.txt");
             // if File Exits delete it and logout else just logout
-            if (userDetails.exists()) {
-                if (userDetails.delete()) {
-                    System.out.println("test");
-                    dispose();
-                    new LoginScreen();
-                }
-            } else {
+            try {
+                Files.deleteIfExists(Paths.get(userDetails.getAbsolutePath()));
                 dispose();
                 new LoginScreen();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
             }
         });
 
